@@ -50,19 +50,31 @@
 .schedule-cell.black-cell .black-toggle{display:none!important}
 @media(max-width:800px){.schedule-table .hour-input{font-size:12px}.schedule-cell .subject-input{font-size:14px}.schedule-cell .teacher-input{font-size:12px}}
 .sync-control{display:flex;flex-direction:column;align-items:center;gap:3px}.sync-feedback{min-height:13px;font-size:9px;line-height:1.2;color:var(--muted);white-space:nowrap}.sync-feedback.success{color:#278344}.sync-feedback.error{color:#c54236}.theme-dark .sync-feedback.success{color:#8ad69b}.theme-dark .sync-feedback.error{color:#ff8b80}.sync-setup{margin-top:13px;border-top:1px solid var(--line);padding-top:12px}.sync-setup summary{cursor:pointer;font-size:12px;font-weight:700}.sync-setup ol{padding-left:20px;color:var(--muted);font-size:11px;line-height:1.5}.sync-setup pre{max-height:260px;overflow:auto;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:10px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.sync-setup p{font-size:11px}.sync-setup code{font-size:10px}.modalhead h2{margin:0}
+/* Controles accesibles desde el botón fijo, sin activación por hover. */
+.top{max-height:none;overflow:visible;opacity:1;transform:none;transition:none}.top.header-hidden{max-height:none;margin-bottom:20px;opacity:1;transform:none;pointer-events:auto}
+.theme-dark{--bg:#202020;--surface:#292929}
+.floating-actions{position:fixed;right:18px;bottom:18px;z-index:30;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.floating-menu{min-width:190px;display:flex;flex-direction:column-reverse;align-items:stretch;gap:8px;padding:11px;border:1px solid var(--line);border-radius:13px;background:var(--surface);box-shadow:0 12px 34px #0005}
+.floating-menu[hidden]{display:none}
+.floating-menu .btn{width:100%;text-align:center;box-shadow:0 3px 10px #0002}
+.floating-menu .sync-control{width:100%}
+.floating-menu .sync-feedback{min-height:13px}
+.menu-toggle{width:48px;height:48px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;border:1px solid var(--line);border-radius:13px;background:var(--accent);color:#161616;box-shadow:0 5px 18px #0004;cursor:pointer}
+.menu-toggle span{display:block;width:20px;height:2px;border-radius:2px;background:currentColor;transition:transform .18s ease,opacity .18s ease}
+.menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(7px) rotate(45deg)}
+.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-7px) rotate(-45deg)}
+.floating-menu:not([hidden])>*{animation:menu-rise .18s ease both}
+.floating-menu:not([hidden])>*:nth-child(1){animation-delay:.12s}.floating-menu:not([hidden])>*:nth-child(2){animation-delay:.08s}.floating-menu:not([hidden])>*:nth-child(3){animation-delay:.04s}
+@keyframes menu-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.install-extension-link{right:78px;bottom:34px}
+@media(max-width:800px){.floating-actions{right:12px;bottom:12px}.install-extension-link{right:72px;bottom:28px}.floating-menu{min-width:175px}}
 </style>
 </head>
 <body>
 <main class="shell">
   <header class="top" id="pageHeader">
     <h1 class="title">Calendario</h1>
-    <div class="actions">
-      <button class="btn" id="themeBtn" aria-label="Activar modo oscuro" title="Activar modo oscuro">☾</button>
-      <span class="theme-separator" aria-hidden="true"></span>
-      <div class="sync-control"><span class="sync-feedback" id="syncQuickFeedback" role="status" aria-live="polite"></span><button class="btn" id="syncBtn" type="button" title="Clic: sincronizar. Doble clic: configuración">Sincronizar</button></div>
-      <button class="btn import-classroom" id="googleBtn" title="Clic: importar la última captura. Doble clic o clic derecho: seleccionar JSON.">Importar Classroom</button>
-      <button class="btn import-moodle" id="moodleImportBtn" title="Clic: importar la última captura. Doble clic o clic derecho: seleccionar JSON.">Importar Moodle</button>
-    </div>
     <button class="btn danger-btn clear-calendar-btn" id="clearCalendarBtn">Eliminar todos los eventos</button>
   </header>
   <nav class="main-tabs" aria-label="Páginas">
@@ -106,7 +118,16 @@
     </section>
   </section>
 </main>
-<a class="install-extension-link" id="installExtensionLink" href="https://addons.mozilla.org/firefox/downloads/file/5140186/08230c309e1543b2aa0e-1.6.2.xpi" download="calendarios-a-agenda-1.6.2.xpi" rel="noopener noreferrer">instalar extension</a>
+<a class="install-extension-link" id="installExtensionLink" target="_blank" href="https://addons.mozilla.org/en-US/developers/addon/08230c309e1543b2aa0e/versions" rel="noopener noreferrer">instalar extension</a>
+<div class="floating-actions" id="floatingActions">
+  <div class="floating-menu" id="floatingMenu" hidden>
+    <div class="sync-control"><span class="sync-feedback" id="syncQuickFeedback" role="status" aria-live="polite"></span><button class="btn" id="syncBtn" type="button" title="Clic: sincronizar. Doble clic: configuración">Sincronizar</button></div>
+    <button class="btn import-moodle" id="moodleImportBtn" title="Clic: importar la última captura. Doble clic o clic derecho: seleccionar JSON.">Importar Moodle</button>
+    <button class="btn import-classroom" id="googleBtn" title="Clic: importar la última captura. Doble clic o clic derecho: seleccionar JSON.">Importar Classroom</button>
+    <button class="btn" id="themeBtn" aria-label="Activar modo oscuro" title="Activar modo oscuro">☾ Tema oscuro</button>
+  </div>
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú de acciones" aria-expanded="false" aria-controls="floatingMenu"><span></span><span></span><span></span></button>
+</div>
 <dialog class="modal" id="clearCalendarDialog"><h2>Eliminar eventos</h2><p id="clearCalendarMessage">¿Qué quieres hacer con los eventos del calendario?</p><div class="bulk-dialog-actions"><button class="btn" id="cancelCalendarDelete">Cancelar</button><button class="btn" id="softDeleteCalendar">Eliminar todos</button><button class="btn danger-btn" id="permanentDeleteCalendar">Eliminar todos PERMA</button></div></dialog>
 <dialog class="modal" id="deletedImportDialog"><h2>Esta tarea está eliminada</h2><p class="deleted-import-title" id="deletedImportTitle"></p><p>¿Quieres importarla y restaurarla?</p><div class="bulk-dialog-actions"><button class="btn" id="skipDeletedImport">Omitir</button><button class="btn primary" id="acceptDeletedImport">Sí, importar</button><button class="btn" id="skipAllDeletedImport">Omitir todos</button><button class="btn primary" id="acceptAllDeletedImport">Sí a todos</button></div></dialog>
 <dialog class="modal" id="syncDialog">
@@ -230,8 +251,8 @@ function renderMonthPicker(){const names=Array.from({length:12},(_,i)=>new Date(
 let pickerYear=cursor.getFullYear();
 $('prev').onclick=()=>{cursor=new Date(cursor.getFullYear(),cursor.getMonth()-1,1);render()};$('next').onclick=()=>{cursor=new Date(cursor.getFullYear(),cursor.getMonth()+1,1);render()};$('todayBtn').onclick=()=>{pickerYear=cursor.getFullYear();renderMonthPicker();$('monthDialog').showModal()};$('yearPrev').onclick=()=>{pickerYear--;renderMonthPicker()};$('yearNext').onclick=()=>{pickerYear++;renderMonthPicker()};
 $('monthDialog').addEventListener('click',e=>{if(e.target===$('monthDialog'))$('monthDialog').close()});$('clearCalendarBtn').onclick=()=>{if(!events.length){status('No hay eventos en el calendario.');return}$('clearCalendarMessage').textContent='Hay '+events.length+' eventos. Elige si quieres enviarlos a eliminados recientes o borrarlos permanentemente.';$('clearCalendarDialog').showModal()};$('cancelCalendarDelete').onclick=()=>$('clearCalendarDialog').close();$('softDeleteCalendar').onclick=()=>deleteAllCalendarEvents(false);$('permanentDeleteCalendar').onclick=()=>deleteAllCalendarEvents(true);$('clearCalendarDialog').addEventListener('click',e=>{if(e.target===$('clearCalendarDialog'))$('clearCalendarDialog').close()});$('toggleAllRecent').onclick=()=>{showAllRecent=!showAllRecent;renderSelected()};
-$('themeBtn').onclick=()=>{document.body.classList.toggle('theme-dark');localStorage.setItem('agenda-tema-oscuro',document.body.classList.contains('theme-dark')?'1':'0');updateThemeButton();queueCloudSync()};function updateThemeButton(){const dark=document.body.classList.contains('theme-dark'),b=$('themeBtn');b.textContent=dark?'☀':'☾';b.title=dark?'Activar modo claro':'Activar modo oscuro';b.setAttribute('aria-label',b.title)}if(localStorage.getItem('agenda-tema-oscuro')==='1')document.body.classList.add('theme-dark');updateThemeButton();
-$('installExtensionLink').addEventListener('click',async e=>{e.preventDefault();const link=e.currentTarget;link.setAttribute('aria-busy','true');try{const response=await fetch(link.href,{mode:'cors',credentials:'omit'});if(!response.ok)throw new Error('No se pudo descargar el archivo.');const file=new Blob([await response.arrayBuffer()],{type:'application/octet-stream'}),objectUrl=URL.createObjectURL(file),download=document.createElement('a');download.href=objectUrl;download.download=link.download;document.body.append(download);download.click();download.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),60000);status('Descarga de la extensión iniciada.')}catch{status('Firefox no permite descargar automáticamente desde este enlace. Haz clic derecho en «instalar extension» y elige «Guardar enlace como…».')}finally{link.removeAttribute('aria-busy')}});
+$('themeBtn').onclick=()=>{document.body.classList.toggle('theme-dark');localStorage.setItem('agenda-tema-oscuro',document.body.classList.contains('theme-dark')?'1':'0');updateThemeButton();queueCloudSync()};function updateThemeButton(){const dark=document.body.classList.contains('theme-dark'),b=$('themeBtn');b.textContent=dark?'☀ Tema claro':'☾ Tema oscuro';b.title=dark?'Activar modo claro':'Activar modo oscuro';b.setAttribute('aria-label',b.title)}if(localStorage.getItem('agenda-tema-oscuro')==='1')document.body.classList.add('theme-dark');updateThemeButton();
+$('menuToggle').onclick=()=>{const menu=$('floatingMenu'),open=menu.hidden;menu.hidden=!open;$('menuToggle').setAttribute('aria-expanded',String(open));$('menuToggle').setAttribute('aria-label',open?'Cerrar menú de acciones':'Abrir menú de acciones')};
 ['google','moodle','manual'].forEach(k=>{const el=$('filter-'+k),v=localStorage.getItem('agenda-filtro-'+k);if(v!==null)el.checked=v==='1';el.addEventListener('change',()=>{localStorage.setItem('agenda-filtro-'+k,el.checked?'1':'0');render();queueCloudSync()})});
 $('activeTab').onclick=()=>{listMode='active';renderSelected()};$('deletedTab').onclick=()=>{movingEventId=null;listMode='deleted';renderSelected()};$('deleteAllRecent').onclick=deleteAllRecent;$('eventCancel').onclick=cancelEdit;
 $('eventForm').addEventListener('submit',e=>{e.preventDefault();const title=$('eventName').value.trim(),date=$('eventDate').value;if(!title||!date)return;const editing=!!editingId;if(editing){const item=events.find(e=>e.id===editingId);if(item){item.title=title;item.date=date}}else events.push({id:'manual-'+crypto.randomUUID(),title,date,source:'MANUAL',className:'',noDue:false});save();selected=date;cursor=new Date(date+'T12:00:00');cancelEdit();render();status(editing?'Evento actualizado.':'Evento guardado.')});
@@ -257,15 +278,6 @@ async function syncOneClick(){if(cloudClient&&cloudUser){syncQuickFeedback(await
 async function initializeCloud(){try{if(!window.supabase?.createClient)return;const config=syncConfig();if(!localStorage.getItem(SYNC_CONFIG_KEY))localStorage.setItem(SYNC_CONFIG_KEY,JSON.stringify(config));$('syncProjectUrl').value=config.url;$('syncPublicKey').value=config.key;$('syncEmail').value=localStorage.getItem(SYNC_EMAIL_KEY)||DEFAULT_SYNC_EMAIL;cloudClient=window.supabase.createClient(config.url,config.key);const {data,error}=await cloudClient.auth.getSession();if(error)throw error;if(data.session){setCloudConnected(data.session.user);await loadCloudData()}else syncMessage('Configuración guardada. Inicia sesión para sincronizar.')}catch(error){syncMessage('No se pudo iniciar la sincronización: '+error.message)}}
 let syncClickTimer;$('syncBtn').addEventListener('click',e=>{if(e.detail>1){clearTimeout(syncClickTimer);return}clearTimeout(syncClickTimer);syncClickTimer=setTimeout(syncOneClick,600)});$('syncBtn').addEventListener('dblclick',e=>{e.preventDefault();clearTimeout(syncClickTimer);openSyncSettings()});$('closeSyncDialog').onclick=()=>$('syncDialog').close();$('syncDialog').addEventListener('click',e=>{if(e.target===$('syncDialog'))$('syncDialog').close()});$('syncCreateAccount').onclick=()=>signInCloud(true);$('syncSignIn').onclick=()=>signInCloud(false);$('syncNow').onclick=()=>loadCloudData();$('syncSignOut').onclick=async()=>{if(!cloudClient)return;await cloudClient.auth.signOut();setCloudConnected(null);cloudLastUpdated='';syncMessage('Sesión cerrada. Los datos guardados en este navegador se conservan.')};initializeCloud();setInterval(async()=>{if(!cloudClient||!cloudUser||cloudTimer||document.hidden)return;try{const {data,error}=await cloudClient.from('agenda_sync').select('payload,updated_at').eq('user_id',cloudUser.id).maybeSingle();if(error)throw error;if(data?.payload&&data.updated_at!==cloudLastUpdated){cloudLastUpdated=data.updated_at;applyCloudSnapshot(data.payload);syncMessage('Cambios recibidos de otro dispositivo.')}}catch(error){syncMessage('No se pudo comprobar la nube: '+error.message)}},15000);
 render();renderSchedule();showPage('deliveries');
-const pageHeader=$('pageHeader'),syncDialog=$('syncDialog');let headerHideTimer,lastPointerY=Infinity;
-function scheduleHeaderHide(delay=300){clearTimeout(headerHideTimer);headerHideTimer=setTimeout(()=>{if(!syncDialog.open&&!pageHeader.matches(':hover')&&lastPointerY>24)pageHeader.classList.add('header-hidden')},delay)}
-function revealHeader(){clearTimeout(headerHideTimer);pageHeader.classList.remove('header-hidden')}
-window.addEventListener('pointermove',event=>{lastPointerY=event.clientY;if(event.clientY<=24){revealHeader();return}if(!pageHeader.matches(':hover'))scheduleHeaderHide()});
-window.addEventListener('touchstart',event=>{if(event.touches[0]?.clientY<=44)revealHeader()},{passive:true});
-pageHeader.addEventListener('mouseenter',()=>{clearTimeout(headerHideTimer);pageHeader.classList.remove('header-hidden')});
-pageHeader.addEventListener('mouseleave',()=>scheduleHeaderHide());
-syncDialog.addEventListener('close',()=>scheduleHeaderHide());
-scheduleHeaderHide(2800);
 })();
 </script>
 </body>
