@@ -1,0 +1,8 @@
+# This repository publishes the static website only.
+*
+!/.gitignore
+!/index.html
+!/favicon.svg
+!/calendario-unificado.html
+!/assets/
+!/assets/Manrope-OFL.txt
